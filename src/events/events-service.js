@@ -24,10 +24,12 @@ const EventsService = {
             .where({id})
             .delete()
     },
-    patchEvent(knex, id, newEventFields) {
+    updateEvent(knex, id, newEventFields) {
         return knex
             .from('atlas_events')
             .where({id})
             .update(newEventFields)
     }
 }
+
+module.exports = EventsService;

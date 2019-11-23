@@ -24,10 +24,12 @@ const LiftsService = {
             .where({id})
             .delete()
     },
-    patchEvent(knex, id, newLiftFields) {
+    updateLift(knex, id, newLiftFields) {
         return knex
             .from('atlas_lifts')
             .where({id})
             .update(newLiftFields)
     }
 }
+
+module.exports = LiftsService;

@@ -14,7 +14,7 @@ const serializeEvent = event => ({
 eventsRouter
     .route('/')
     .get((req, res, next) => {
-        const knexInstance = req.app.get('db')
+        const knexInstance = req.app.get('db');
         EventsService.getAllEvents(
             knexInstance
         )

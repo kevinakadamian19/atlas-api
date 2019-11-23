@@ -27,8 +27,8 @@ athletesRouter
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {name, age, gender, weight} = req.body;
-        const newAthlete = {name, age, gender, weight}
+        const {name, age, gender, weight, event} = req.body;
+        const newAthlete = {name, age, gender, weight, event}
         for(const [key,value] of Object.entries(newAthlete)) {
             if(value === null) {
                 return res.status(404).json({

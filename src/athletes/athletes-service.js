@@ -24,7 +24,7 @@ const AthletesService = {
             .where({id})
             .delete()
     },
-    patchEvent(knex, id, newAthleteFields) {
+    updateAthlete(knex, id, newAthleteFields) {
         return knex
             .from('atlas_athletes')
             .where({id})
