@@ -50,7 +50,7 @@ describe(`Events endpoints`, function() {
                     .expect(404, {error: {message: `Event not found`}})
             })
         })
-        context(`Given there are events in the database`, () => {
+        context(`Given there are guests in the database`, () => {
             const testEvents = makeEventsArray();
             this.beforeEach(`inserts events`, () => {
                 return db

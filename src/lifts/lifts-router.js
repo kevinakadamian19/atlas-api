@@ -1,5 +1,4 @@
 const express = require('express')
-const xss = require('xss')
 const path = require('path')
 const LiftsService = require('./lifts-service')
 

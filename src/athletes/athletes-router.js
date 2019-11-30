@@ -1,6 +1,7 @@
 const express = require('express')
 const xss = require('xss')
 const path = require('path')
+const logger = require('../logger')
 const AthletesService = require('./athletes-service')
 
 const athletesRouter = express.Router()
@@ -13,6 +14,7 @@ const serializeAthlete = athlete => ({
     weight: athlete.weight,
     gender: athlete.gender
 })
+
 
 athletesRouter
     .route('/')
@@ -76,6 +78,7 @@ athletesRouter
             req.params.athlete_id
         )
         .then(numRowsAffected => {
+            logger.info(`Athlete with id ${req.params.athlete_id} deleted.`)
             res.status(204).end()
         })
         .catch(next)
@@ -102,5 +105,7 @@ athletesRouter
         })
         .catch(next)
 })
+
+
 
 module.exports = athletesRouter;
