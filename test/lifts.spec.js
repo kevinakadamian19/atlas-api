@@ -1,9 +1,9 @@
 const {expect} = require('chai')
 const knex = require('knex')
 const app = require('../src/app')
-const { makeEventsArray } = require('./atlas.fixtures')
+const { makeLiftsArray } = require('./atlas.fixtures')
 
-describe(`Events endpoints`, function() {
+describe(`Lifts endpoints`, function() {
     let db;
 
     before(`make knex instance`, () => {
@@ -15,69 +15,78 @@ describe(`Events endpoints`, function() {
 
     after(`disconnect from db`, () => db.destroy())
 
-    before(`clean the table`, () => db('atlas_events').truncate())
+    before(`clean the table`, () => db('atlas_lifts').truncate())
 
-    this.afterEach('Clean Up', () => db('atlas_events').truncate())
+    this.afterEach('Clean Up', () => db('atlas_lifts').truncate())
 
-    describe(`GET /api/events`, () => {
-        context(`Given there are no events in the database`, () => {
+    describe(`GET /api/lifts`, () => {
+        context(`Given there are no liftss in the database`, () => {
             it('responds with 200 and an empty list', () => {
                 return supertest(app)
-                    .get(`/api/expenses`)
+                    .get(`/api/lifts`)
                     .expect(200, [])
             })
         })
-        context(`Given there are events in the database`, () => {
-            const testEvents = makeEventsArray()
+        context(`Given there are lifts in the database`, () => {
+            const testLifts = {makeLiftsArray}
             beforeeEach('insert events', () => {
                 return db
-                    .get('/api/events')
-                    .expect(200, testEvents)
+                    .get('/api/lifts')
+                    .expect(200, testLifts)
             })
-            it(`responds with 200 and all of events`, () => {
+            it(`responds with 200 and all of lifts`, () => {
                 return supertest(app)
-                    .get('/api/events')
-                    .expect(200, testEvents)
+                    .get('/api/lifts')
+                    .expect(200, testLifts)
             })
         })
     })
-    describe(`GET /api/events/:event_id`, () => {
-        context(`Given there are no events in databae`, () => {
+    describe(`GET /api/lifts/:lift_id`, () => {
+        context(`Given there are no lifts in database`, () => {
             it(`responds with a 404 error`, () => {
-                const eventId = 123456;
+                const liftId = 123456;
                 return supertest(app)
-                    .get(`/api/events/${eventId}`)
-                    .expect(404, {error: {message: `Event not found`}})
+                    .get(`/api/lifts/${liftId}`)
+                    .expect(404, {error: {message: `Lift not found`}})
             })
         })
-        context(`Given there are guests in the database`, () => {
-            const testEvents = makeEventsArray();
-            this.beforeEach(`inserts events`, () => {
+        context(`Given there are lifts in the database`, () => {
+            const testLifts = { makeLiftsArray }
+            this.beforeEach(`inserts lifts`, () => {
                 return db
-                    .into(`atlas_events`)
-                    .insert(testEvents)
+                    .into(`atlas_lifts`)
+                    .insert(testLifts)
             })
-            it(`responds with a 200 request, and with the specific event`, () => {
-                const eventId = 2;
-                const expectedEvent = testEvents[eventId-1]
+            it(`responds with a 200 request, and with the specific lift`, () => {
+                const liftId = 2;
+                const expectedLift = testLifts[liftId-1]
                 return supertest(app)
-                    .get(`/api/events/${eventId}`)
-                    .expect(200, expectedEvent)
+                    .get(`/api/lifts/${liftId}`)
+                    .expect(200, expectedLift)
             })
         })
     })
-    describe(`POST /api/events`, () => {
-        it(`creates a event responding with a 201 and new event`, () => {
-            const newEvent = {
-                id: 5,
-                name: 'IPF Worlds'
+    describe(`POST /api/lifts`, () => {
+        it(`creates a lift responding with a 201 and new lift`, () => {
+            const newLift = {
+                id: 4,
+                bench: 300,
+                squat: 200,
+                deadlift: 400,
+                event: 1,
+                athlete: 3
+                
             }
             return supertest(app)
-                .post(`/api/events`)
+                .post(`/api/lifts`)
                 .expect(201)
                 .expect(res => {
-                    expect(res.body.name).to.eql(newEvent.name)
-                    expect(res.body).to.have.property('id')
+                    expect(res.body.bench.to.eql(newLift.bench),
+                    expect(res.body.squat).to.eql(newLift.squat),
+                    expect(res.body.deadlift).to.eql(newLift.deadlift),
+                    expect(res.body.event).to.eql(newLift.event),
+                    expect(res.body.athlete).to.eql(newLift.athlete),
+                    expect(res.body).to.have.property('id'),
                     expect(actual).to.eql(expected)
                 })
                 .then(postRes => 
@@ -86,19 +95,21 @@ describe(`Events endpoints`, function() {
                         .expect(postRes.body)
                 )
         })
-        const requiredFields = ['name']
+        const requiredFields = ['squat', 'bench', 'deadlift']
 
         requiredFields.forEach(fields => {
-            const newEvent = {
-                name: 'test name'
+            const newLift = {
+                squat: 250,
+                bench: 150,
+                deadlift: 350
             }
         })
         it(`responds with a 400 and an error message when ${field} is missing`, () => {
-            delete(newEvent)[field]
+            delete(newLift)[field]
 
             return supertest(app)
-                .post(`/api/events`)
-                .send(newEvent)
+                .post(`/api/lifts`)
+                .send(newLift)
                 .expect(400, {
                     error: {
                         message: `Missing ${field} in request body`
@@ -106,103 +117,105 @@ describe(`Events endpoints`, function() {
                 })
         })
     })
-    describe(`DELETE /api/events/:event_id`, () => {
-        context(`Given no events`, () => {
+    describe(`DELETE /api/lifts/:lift_id`, () => {
+        context(`Given no lifts`, () => {
             it(`responds with a 404`, () => {
-                const eventId = 123456
+                const liftId = 123456
                 return supertest(app)
-                    .delete(`/api/events/${eventId}`)
+                    .delete(`/api/lifts/${liftId}`)
                     .expect(404, {
-                        error: {message: `Event not found`}
+                        error: {message: `Lift not found`}
                     })
             })
         })
-        context(`Given there are events in the database`, () => {
-            const testEvents = makeEventsArray();
-            beforeEach('insert events', () => {
+        context(`Given there are lifts in the database`, () => {
+            const testLifts = { makeLiftsArray }
+            beforeEach('insert lifts', () => {
                 return db
-                    .into('atlas_events')
-                    .insert(testEvents)
+                    .into('atlas_lifts')
+                    .insert(testLifts)
             })
-            it('responds with 204 and removes the events', () => {
+            it('responds with 204 and removes the lift', () => {
                 const idToRemove = 2
-                const expectedEvents = testEvents.filter(event => event.id !== idToRemove)
+                const expectedLifts = testLifts.filter(lift => lift.id !== idToRemove)
                 return supertest(app)
-                    .delete(`/api/events/${idToRemove}`)
+                    .delete(`/api/lifts/${idToRemove}`)
                     .expect(204)
                     .then(res => {
                         supertest(app)
-                            .get(`/api/events`)
-                            .expect(expectedEvents)
+                            .get(`/api/lifts`)
+                            .expect(expectedLifts)
                     })
             })
         })
     })
-    describe(`PATCH /api/events/:event_id`, () => {
-        context(`Given no events`, () => {
+    describe(`PATCH /api/lifts/:lift_id`, () => {
+        context(`Given no lifts`, () => {
             it(`responds with a 404`, () => {
-                const eventId = 123456;
+                const liftId = 123456;
                 return supertest(app)
-                    .patch(`/api/events/${eventId}`)
-                    .expect(404, {error: {message: `Event not found`}})
+                    .patch(`/api/lifts/${liftId}`)
+                    .expect(404, {error: {message: `Lift not found`}})
             })
         })
-        context(`Given there are events in database`, () => {
-            const testEvents = makeEventsArray();
-            beforeEach('insert events', () => {
+        context(`Given there are lifts in database`, () => {
+            const testLifts = {makeLiftsArray};
+            beforeEach('insert lifts', () => {
                 return db
-                    .into('atlas_events')
-                    .insert(testEvents)
+                    .into('atlas_lifts')
+                    .insert(testLifts)
             })
-            it(`responds with 204 and updates the event`, () => {
+            it(`responds with 204 and updates the lift`, () => {
                 idToUpdate = 2;
-                const patchEvent = {
-                    name: 'Peter Pan Classic'
+                const patchLift = {
+                    squat: 200,
+                    bench: 200,
+                    deadlift: 450
                 }
-                const expectedEvent = {
-                    ...testEvents[idToUpdate-1],
-                    ...patchEvent
+                const expectedLift = {
+                    ...testLifts[idToUpdate-1],
+                    ...patchLift
                 }
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
-                    .send(patchEvent)
+                    .patch(`/api/lifts/${idToUpdate}`)
+                    .send(patchLift)
                     .expect(res => {
                         supertest(app)
-                            .get(`/api/events/${idToUpdate}`)
-                            .expect(expectedEvent)
+                            .get(`/api/lifts/${idToUpdate}`)
+                            .expect(expectedLift)
                     })
             })
             it(`responds with 400 when no required fields are provided`, () => {
                 const idToUpdate = 2;
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
+                    .patch(`/api/lifts/${idToUpdate}`)
                     .send({irrelevantField: 'foo'})
                     .expect(400, {
                         error: {
-                            message: `Request body must contain either name, or email`
+                            message: `Request body must contain either bench, squat, or deadlift`
                         }
                     })
             })
             it(`responds with a 204 when updating only a subset of fields`, () => {
                 const idToUpdate = 2;
-                const patchEvent = {
-                    name: 'SBD Class Raw'
+                const patchLift = {
+                    bench: 700
                 }
-                const expectedEvent = {
-                    ...testEvents[idToUpdate-1],
-                    patchEvent
+                const expectedLift = {
+                    ...testLifts[idToUpdate-1],
+                    patchLift
                 }
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
+                    .patch(`/api/lifts/${idToUpdate}`)
                     .send({
-                        ...patchEvent,
-                        fieldToIgnore: 'should not be in GET response'
+                        ...patchLift,
+                        fieldToIgnore: 'should not be in Patch response'
                     })
                     .expect(204)
                     .then(res => 
                         supertest(app)
-                            .get(`/api/events/${idToUpdate}`)
-                            .expect(expectedEvent)
+                            .get(`/api/lifts/${idToUpdate}`)
+                            .expect(expectedLift)
                     )
             })
         })

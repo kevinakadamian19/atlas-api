@@ -28,7 +28,7 @@ describe(`Events endpoints`, function() {
             })
         })
         context(`Given there are events in the database`, () => {
-            const testEvents = makeEventsArray()
+            const testEvents = {makeEventsArray}
             beforeeEach('insert events', () => {
                 return db
                     .get('/api/events')
@@ -51,7 +51,7 @@ describe(`Events endpoints`, function() {
             })
         })
         context(`Given there are events in the database`, () => {
-            const testEvents = makeEventsArray();
+            const testEvents = { makeEventsArray }
             this.beforeEach(`inserts events`, () => {
                 return db
                     .into(`atlas_events`)
@@ -118,7 +118,7 @@ describe(`Events endpoints`, function() {
             })
         })
         context(`Given there are events in the database`, () => {
-            const testEvents = makeEventsArray();
+            const testEvents = { makeEventsArray };
             beforeEach('insert events', () => {
                 return db
                     .into('atlas_events')
@@ -148,7 +148,7 @@ describe(`Events endpoints`, function() {
             })
         })
         context(`Given there are events in database`, () => {
-            const testEvents = makeEventsArray();
+            const testEvents = {makeEventsArray};
             beforeEach('insert events', () => {
                 return db
                     .into('atlas_events')

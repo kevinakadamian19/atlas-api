@@ -28,13 +28,13 @@ describe(`Athletes endpoints`, function() {
             })
         })
         context(`Given there are athletes in the database`, () => {
-            const testAthletes = makeAthletesArray()
-            beforeeEach('insert athletes', () => {
+            const testAthletes = {makeAthletesArray}
+            beforeEach('insert athletes', () => {
                 return db
                     .get('/api/athletes')
                     .expect(200, testAthletes)
             })
-            it(`responds with 200 and all of events`, () => {
+            it(`responds with 200 and all athletes`, () => {
                 return supertest(app)
                     .get('/api/athletes')
                     .expect(200, testAthletes)
@@ -42,7 +42,7 @@ describe(`Athletes endpoints`, function() {
         })
     })
     describe(`GET /api/athletes/:athlete_id`, () => {
-        context(`Given there are no athletes in databae`, () => {
+        context(`Given there are no athletes in database`, () => {
             it(`responds with a 404 error`, () => {
                 const athleteId = 123456;
                 return supertest(app)
@@ -51,7 +51,7 @@ describe(`Athletes endpoints`, function() {
             })
         })
         context(`Given there are athletes in the database`, () => {
-            const testAthletes = makeAthletesArray();
+            const testAthletes = {makeAthletesArray};
             this.beforeEach(`inserts athletes`, () => {
                 return db
                     .into(`atlas_athletes`)
@@ -90,7 +90,7 @@ describe(`Athletes endpoints`, function() {
                 })
                 .then(postRes => 
                     supertest(app)
-                        .get(`/api/events/${postRes.body.id}`)
+                        .get(`/api/athletes/${postRes.body.id}`)
                         .expect(postRes.body)
                 )
         })
@@ -130,7 +130,7 @@ describe(`Athletes endpoints`, function() {
             })
         })
         context(`Given there are athletes in the database`, () => {
-            const testAthletes = makeAthletesArray();
+            const testAthletes = { makeAthletesArray }
             beforeEach('insert athletes', () => {
                 return db
                     .into('atlas_athletes')
@@ -160,13 +160,13 @@ describe(`Athletes endpoints`, function() {
             })
         })
         context(`Given there are athletes in database`, () => {
-            const testAthletes = makeAthletesArray();
+            const testAthletes = {makeAthletesArray};
             beforeEach('insert athletes', () => {
                 return db
                     .into('atlas_athletes')
                     .insert(testAthletes)
             })
-            it(`responds with 204 and updates the event`, () => {
+            it(`responds with 204 and updates the athlete`, () => {
                 idToUpdate = 2;
                 const patchAthlete = {
                     name: 'Jane Doe',
