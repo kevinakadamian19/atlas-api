@@ -3,7 +3,5 @@ CREATE TABLE atlas_lifts (
     squat INTEGER NOT NULL,
     bench INTEGER NOT NULL,
     deadlift INTEGER NOT NULL,
-    athlete INTEGER REFERENCES atlas_athletes(id) NOT NULL,
-    event INTEGER REFERENCES atlas_events(id) NOT NULL,
     total INTEGER
 );

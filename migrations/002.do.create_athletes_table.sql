@@ -4,5 +4,9 @@ CREATE TABLE atlas_athletes (
     age INTEGER NOT NULL,
     gender TEXT NOT NULL,
     weight INTEGER NOT NULL,
-    event INTEGER REFERENCES atlas_events(id) NOT NULL
 );
+
+ALTER TABLE atlas_lifts
+    ADD COLUMN
+        athlete_id INTEGER atlas_athletes(id)
+        ON DELETE SET NULL;
