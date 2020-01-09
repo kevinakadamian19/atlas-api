@@ -5,4 +5,4 @@ CREATE TABLE atlas_athletes (
     gender TEXT NOT NULL,
     weight INTEGER NOT NULL,
     event INTEGER REFERENCES atlas_events(id) NOT NULL
-)
+);

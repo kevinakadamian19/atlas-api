@@ -14,9 +14,7 @@ const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'dev';
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(
-    cors({
-        CLIENT_ORIGIN
-    })
+    cors()
 );
 
 app.use(function validateBearerToken(req, res, next) {
@@ -37,13 +35,13 @@ app.get('/', (req, res) => {
     res.send('Hello, world!')
 })
 
-app.use((error, req, res, next) => {
+app.use(function errorHandler(error, req, res, next) {
     let response
-    /*if(process.env.NODE_ENV === 'production') {
+    if(process.env.NODE_ENV === 'production') {
         response = { error: { message: 'server issue' }}
     } else {
         response = { error }
-    }*/
+    }
     res.status(500).json(response);
 })
 

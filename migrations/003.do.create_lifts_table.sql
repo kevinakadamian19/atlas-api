@@ -6,4 +6,4 @@ CREATE TABLE atlas_lifts (
     athlete INTEGER REFERENCES atlas_athletes(id) NOT NULL,
     event INTEGER REFERENCES atlas_events(id) NOT NULL,
     total INTEGER
-)
+);
