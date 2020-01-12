@@ -39,7 +39,7 @@ competitionsRouter
             res
                 .status(201)
                 .location(path.posix.join(req.originalUrl, `${competition.id}`))
-                .json(serializeEvent(competition))
+                .json(serializeCompetition(competition))
         })
         .catch(next)
 })

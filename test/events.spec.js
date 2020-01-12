@@ -1,9 +1,9 @@
 const {expect} = require('chai')
 const knex = require('knex')
 const app = require('../src/app')
-const { makeEventsArray } = require('./atlas.fixtures')
+const { makeCompetitionsArray } = require('./atlas.fixtures')
 
-describe(`Events endpoints`, function() {
+describe(`Competitions endpoints`, function() {
     let db;
 
     before(`make knex instance`, () => {
@@ -15,90 +15,90 @@ describe(`Events endpoints`, function() {
 
     after(`disconnect from db`, () => db.destroy())
 
-    before(`clean the table`, () => db('atlas_events').truncate())
+    before(`clean the table`, () => db('atlas_competitions').truncate())
 
-    this.afterEach('Clean Up', () => db('atlas_events').truncate())
+    this.afterEach('Clean Up', () => db('atlas_competitions').truncate())
 
-    describe(`GET /api/events`, () => {
-        context(`Given there are no events in the database`, () => {
+    describe(`GET /api/competitions`, () => {
+        context(`Given there are no competitions in the database`, () => {
             it('responds with 200 and an empty list', () => {
                 return supertest(app)
-                    .get(`/api/expenses`)
+                    .get(`/api/competitions`)
                     .expect(200, [])
             })
         })
-        context(`Given there are events in the database`, () => {
-            const testEvents = {makeEventsArray}
-            beforeeEach('insert events', () => {
+        context(`Given there are competitions in the database`, () => {
+            const testCompetitions = {makeCompetitionsArray}
+            beforeeEach('insert competitions', () => {
                 return db
-                    .get('/api/events')
-                    .expect(200, testEvents)
+                    .get('/api/competitions')
+                    .expect(200, testCompetitions)
             })
-            it(`responds with 200 and all of events`, () => {
+            it(`responds with 200 and all of competitions`, () => {
                 return supertest(app)
-                    .get('/api/events')
-                    .expect(200, testEvents)
+                    .get('/api/competitions')
+                    .expect(200, testCompetitions)
             })
         })
     })
-    describe(`GET /api/events/:event_id`, () => {
-        context(`Given there are no events in databae`, () => {
+    describe(`GET /api/competitions/:competition_id`, () => {
+        context(`Given there are no competitions in database`, () => {
             it(`responds with a 404 error`, () => {
-                const eventId = 123456;
+                const competitionId = 123456;
                 return supertest(app)
-                    .get(`/api/events/${eventId}`)
-                    .expect(404, {error: {message: `Event not found`}})
+                    .get(`/api/competitions/${competitionId}`)
+                    .expect(404, {error: {message: `Competition not found`}})
             })
         })
-        context(`Given there are events in the database`, () => {
-            const testEvents = { makeEventsArray }
-            this.beforeEach(`inserts events`, () => {
+        context(`Given there are competitions in the database`, () => {
+            const testCompetitions = { makeCompetitionsArray }
+            this.beforeEach(`inserts competitions`, () => {
                 return db
-                    .into(`atlas_events`)
-                    .insert(testEvents)
+                    .into(`atlas_competitions`)
+                    .insert(testCompetitions)
             })
-            it(`responds with a 200 request, and with the specific event`, () => {
-                const eventId = 2;
-                const expectedEvent = testEvents[eventId-1]
+            it(`responds with a 200 request, and with the specific competition`, () => {
+                const competitionId = 2;
+                const expectedCompetition = testCompetitions[competitionId-1]
                 return supertest(app)
-                    .get(`/api/events/${eventId}`)
-                    .expect(200, expectedEvent)
+                    .get(`/api/events/${competitionId}`)
+                    .expect(200, expectedCompetition)
             })
         })
     })
-    describe(`POST /api/events`, () => {
-        it(`creates a event responding with a 201 and new event`, () => {
-            const newEvent = {
+    describe(`POST /api/competitions`, () => {
+        it(`creates a competition responding with a 201 and new competition`, () => {
+            const newCompetition = {
                 id: 5,
                 name: 'IPF Worlds'
             }
             return supertest(app)
-                .post(`/api/events`)
+                .post(`/api/competitions`)
                 .expect(201)
                 .expect(res => {
-                    expect(res.body.name).to.eql(newEvent.name)
+                    expect(res.body.name).to.eql(newCompetition.name)
                     expect(res.body).to.have.property('id')
                     expect(actual).to.eql(expected)
                 })
                 .then(postRes => 
                     supertest(app)
-                        .get(`/api/events/${postRes.body.id}`)
+                        .get(`/api/competitions/${postRes.body.id}`)
                         .expect(postRes.body)
                 )
         })
         const requiredFields = ['name']
 
         requiredFields.forEach(fields => {
-            const newEvent = {
+            const newCompetition = {
                 name: 'test name'
             }
         })
         it(`responds with a 400 and an error message when ${field} is missing`, () => {
-            delete(newEvent)[field]
+            delete(newCompetition)[field]
 
             return supertest(app)
-                .post(`/api/events`)
-                .send(newEvent)
+                .post(`/api/competitions`)
+                .send(newCompetition)
                 .expect(400, {
                     error: {
                         message: `Missing ${field} in request body`
@@ -106,103 +106,103 @@ describe(`Events endpoints`, function() {
                 })
         })
     })
-    describe(`DELETE /api/events/:event_id`, () => {
-        context(`Given no events`, () => {
+    describe(`DELETE /api/competitions/:competition_id`, () => {
+        context(`Given no competitions`, () => {
             it(`responds with a 404`, () => {
-                const eventId = 123456
+                const competitionId = 123456
                 return supertest(app)
-                    .delete(`/api/events/${eventId}`)
+                    .delete(`/api/competitions/${competitionId}`)
                     .expect(404, {
-                        error: {message: `Event not found`}
+                        error: {message: `Competition not found`}
                     })
             })
         })
-        context(`Given there are events in the database`, () => {
-            const testEvents = { makeEventsArray };
-            beforeEach('insert events', () => {
+        context(`Given there are competitions in the database`, () => {
+            const testCompetitions = { makeCompetitionsArray };
+            beforeEach('insert competitions', () => {
                 return db
-                    .into('atlas_events')
-                    .insert(testEvents)
+                    .into('atlas_competitions')
+                    .insert(testCompetitions)
             })
-            it('responds with 204 and removes the events', () => {
+            it('responds with 204 and removes the competitions', () => {
                 const idToRemove = 2
-                const expectedEvents = testEvents.filter(event => event.id !== idToRemove)
+                const expectedCompetitions = testCompetitions.filter(competition => competition.id !== idToRemove)
                 return supertest(app)
-                    .delete(`/api/events/${idToRemove}`)
+                    .delete(`/api/competitions/${idToRemove}`)
                     .expect(204)
                     .then(res => {
                         supertest(app)
-                            .get(`/api/events`)
-                            .expect(expectedEvents)
+                            .get(`/api/competitions`)
+                            .expect(expectedCompetitions)
                     })
             })
         })
     })
-    describe(`PATCH /api/events/:event_id`, () => {
-        context(`Given no events`, () => {
+    describe(`PATCH /api/competitions/:competition_id`, () => {
+        context(`Given no competitions`, () => {
             it(`responds with a 404`, () => {
-                const eventId = 123456;
+                const competitionId = 123456;
                 return supertest(app)
-                    .patch(`/api/events/${eventId}`)
-                    .expect(404, {error: {message: `Event not found`}})
+                    .patch(`/api/competitions/${competitionId}`)
+                    .expect(404, {error: {message: `Competition not found`}})
             })
         })
-        context(`Given there are events in database`, () => {
-            const testEvents = {makeEventsArray};
-            beforeEach('insert events', () => {
+        context(`Given there are competitions in database`, () => {
+            const testCompetitions = {makeCompetitionsArray};
+            beforeEach('insert competition', () => {
                 return db
-                    .into('atlas_events')
-                    .insert(testEvents)
+                    .into('atlas_competitions')
+                    .insert(testCompetitions)
             })
-            it(`responds with 204 and updates the event`, () => {
+            it(`responds with 204 and updates the competitions`, () => {
                 idToUpdate = 2;
-                const patchEvent = {
+                const patchCompetition = {
                     name: 'Peter Pan Classic'
                 }
-                const expectedEvent = {
-                    ...testEvents[idToUpdate-1],
-                    ...patchEvent
+                const expectedCompetition = {
+                    ...testCompetitions[idToUpdate-1],
+                    ...patchCompetition
                 }
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
-                    .send(patchEvent)
+                    .patch(`/api/competitions/${idToUpdate}`)
+                    .send(patchCompetition)
                     .expect(res => {
                         supertest(app)
                             .get(`/api/events/${idToUpdate}`)
-                            .expect(expectedEvent)
+                            .expect(expectedCompetition)
                     })
             })
             it(`responds with 400 when no required fields are provided`, () => {
                 const idToUpdate = 2;
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
+                    .patch(`/api/competitions/${idToUpdate}`)
                     .send({irrelevantField: 'foo'})
                     .expect(400, {
                         error: {
-                            message: `Request body must contain either name, or email`
+                            message: `Request body must contain name`
                         }
                     })
             })
             it(`responds with a 204 when updating only a subset of fields`, () => {
                 const idToUpdate = 2;
-                const patchEvent = {
+                const patchCompetition = {
                     name: 'SBD Class Raw'
                 }
-                const expectedEvent = {
-                    ...testEvents[idToUpdate-1],
+                const expectedCompetition = {
+                    ...testCompetition[idToUpdate-1],
                     patchEvent
                 }
                 return supertest(app)
-                    .patch(`/api/events/${idToUpdate}`)
+                    .patch(`/api/competitions/${idToUpdate}`)
                     .send({
-                        ...patchEvent,
+                        ...patchCompetition,
                         fieldToIgnore: 'should not be in GET response'
                     })
                     .expect(204)
                     .then(res => 
                         supertest(app)
-                            .get(`/api/events/${idToUpdate}`)
-                            .expect(expectedEvent)
+                            .get(`/api/competitions/${idToUpdate}`)
+                            .expect(expectedCompetition)
                     )
             })
         })

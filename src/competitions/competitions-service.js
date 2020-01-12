@@ -1,11 +1,11 @@
 const CompetitionsService = {
     getAllCompetitions(knex) {
-        return knex.select('*').from('atlas_competition')
+        return knex.select('*').from('atlas_competitions')
     },
     insertCompetition(knex, newEvent) {
         return knex
             .insert(newEvent)
-            .into('atlas_competition')
+            .into('atlas_competitions')
             .returning('*')
             .then(rows => {
                 return rows[0]

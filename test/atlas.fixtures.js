@@ -1,4 +1,4 @@
-function makeEventsArray() {
+function makeCompetitionsArray() {
     return [
         {
             id: 1,
@@ -75,6 +75,6 @@ function makeLiftsArray() {
 
 module.exports = {
     makeAtheletesArray,
-    makeEventsArray,
+    makeCompetitionsArray,
     makeLiftsArray
 };
