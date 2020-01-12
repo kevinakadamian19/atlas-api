@@ -8,5 +8,5 @@ CREATE TABLE atlas_athletes (
 
 ALTER TABLE atlas_lifts
     ADD COLUMN
-        athlete_id INTEGER atlas_athletes(id)
+        athlete INTEGER atlas_athletes(id)
         ON DELETE SET NULL;

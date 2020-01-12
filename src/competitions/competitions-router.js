@@ -1,74 +1,74 @@
 const express = require('express')
 const xss = require('xss')
 const path = require('path')
-const EventsService = require('./events-service')
+const CompetitionsService = require('./competitions-service')
 
-const eventsRouter = express.Router()
+const competitionsRouter = express.Router()
 const jsonParser = express.json()
 
-const serializeEvent = event => ({
-    id: event.id,
-    name: xss(event.name)
+const serializeCompetition = competition => ({
+    id: competition.id,
+    name: xss(competition.name)
 })
 
-eventsRouter
+competitionsRouter
     .route('/')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db');
-        EventsService.getAllEvents(
+        CompetitionsService.getAllCompetitions(
             knexInstance
         )
-        .then(events => {
-            res.json(events.map(serializeEvent))
+        .then(competitions => {
+            res.json(competitions.map(serializeCompetition))
         })
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
         const {name} = req.body;
-        const newEvent = {name}
+        const newCompetition = {name}
         if(!name) {
             return res.status(404).json({
                 error: {message: `Missing name from request body.`}
             })
         }
-        EventsService.insertEvent(
+        CompetitionsService.insertCompetition(
             req.app.get('db'),
-            newEvent
+            newCompetition
         )
-        .then(event => {
+        .then(competition => {
             res
                 .status(201)
-                .location(path.posix.join(req.originalUrl, `${event.id}`))
-                .json(serializeEvent(event))
+                .location(path.posix.join(req.originalUrl, `${competition.id}`))
+                .json(serializeEvent(competition))
         })
         .catch(next)
 })
 
-eventsRouter
-    .route(`/:event_id`)
+competitionsRouter
+    .route(`/:competition_id`)
     .all((req, res, next) => {
-        EventsService.getById(
+        CompetitionsService.getById(
             req.app.get('db'),
-            req.params.event_id
+            req.params.competition_id
         )
-        .then(event => {
-            if(!event) {
+        .then(competition => {
+            if(!competition) {
                 return res.status(404).json({
-                    error: {message: `Event not found`}
+                    error: {message: `Competition not found`}
                 })
             }
-            res.event = event
+            res.competition = competition
             next()
         })
         .catch(next)
     })
     .get((req, res, next) => {
-        res.json(serializeEvent(res.event))
+        res.json(serializeCompetition(res.competition))
     })
     .delete((req, res, next) => {
-        EventsService.deleteEvent(
+        CompetitionsService.deleteCompetition(
             req.app.get('db'),
-            req.params.event_id
+            req.params.competition_id
         )
         .then(numRowsAffected => {
             res.status(204).end()
@@ -77,9 +77,9 @@ eventsRouter
     })
     .patch(jsonParser, (req, res, next) => {
         const {name} = req.body
-        const eventToUpdate = {name}
+        const competitionToUpdate = {name}
 
-        const numberOfValues = Object.values(eventToUpdate).filter(Boolean).length
+        const numberOfValues = Object.values(competitionToUpdate).filter(Boolean).length
         if(numberOfValues === 0) {
             return res.status(400).json({
                 error: {
@@ -87,10 +87,10 @@ eventsRouter
                 }
             })
         }
-        EventsService.updateEvent(
+        CompetitionsService.updateCompetition(
             req.app.get('db'),
-            req.params.event_id,
-            eventToUpdate
+            req.params.competition_id,
+            competitionToUpdate
         )
         .then(numRowsAffected => {
             res.status(204).end()
@@ -98,4 +98,4 @@ eventsRouter
         .catch(next)
 })
 
-module.exports = eventsRouter;
+module.exports = competitionsRouter;

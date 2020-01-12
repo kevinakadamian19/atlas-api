@@ -29,8 +29,8 @@ athletesRouter
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {name, age, gender, weight, event} = req.body;
-        const newAthlete = {name, age, gender, weight, event}
+        const {name, age, gender, weight, competition} = req.body;
+        const newAthlete = {name, age, gender, weight, competition}
         for(const [key,value] of Object.entries(newAthlete)) {
             if(value === null) {
                 return res.status(404).json({
@@ -84,8 +84,8 @@ athletesRouter
         .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
-        const {name, age, gender, weight} = req.body
-        const athleteToUpdate = {name, age, gender, weight}
+        const {name, age, gender, weight, competition} = req.body
+        const athleteToUpdate = {name, age, gender, weight, competition}
 
         const numberOfValues = Object.values(athleteToUpdate).filter(Boolean).length
         if(numberOfValues === 0) {

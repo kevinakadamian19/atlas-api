@@ -28,8 +28,8 @@ liftsRouter
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {squat, bench, deadlift, athlete, event, total} = req.body;
-        const newLift = {squat, bench, deadlift, athlete, event, total}
+        const {squat, bench, deadlift, athlete, competition, total} = req.body;
+        const newLift = {squat, bench, deadlift, athlete, competition, total}
         for(const [key,value] of Object.entries(newLift)) {
             if(value === null) {
                 return res.status(404).json({

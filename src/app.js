@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
 const { NODE_ENV, CLIENT_ORIGIN } = require('./config')
-const eventsRouter = require('./events/events-router')
+const competitionsRouter = require('./competitions/competitions-router')
 const athletesRouter = require('./athletes/athletes-router')
 const liftsRouter = require('./lifts/lifts-router')
 
@@ -27,7 +27,7 @@ app.use(function validateBearerToken(req, res, next) {
     next()
 })
 
-app.use(`/api/events`, eventsRouter)
+app.use(`/api/competitions`, competitionsRouter)
 app.use(`/api/athletes`, athletesRouter)
 app.use(`/api/lifts`, liftsRouter)
 

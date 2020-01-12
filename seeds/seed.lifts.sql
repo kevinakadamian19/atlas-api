@@ -1,4 +1,4 @@
-INSERT INTO atlas_lifts (squat, bench, deadlift, event, athlete, total)
+INSERT INTO atlas_lifts (squat, bench, deadlift, competition, athlete, total)
     VALUES
 ('178', '102', '204', '1', '1', '494'),
 ('183', '128', '213', '2', '2', '542'),
