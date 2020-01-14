@@ -12,7 +12,8 @@ const serializeAthlete = athlete => ({
     name: xss(athlete.name),
     age: athlete.age,
     weight: athlete.weight,
-    gender: athlete.gender
+    gender: athlete.gender,
+    competition_id: athlete.competition_id
 })
 
 
@@ -29,8 +30,8 @@ athletesRouter
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {name, age, gender, weight, competition} = req.body;
-        const newAthlete = {name, age, gender, weight, competition}
+        const {name, age, gender, weight, competition_id} = req.body;
+        const newAthlete = {name, age, gender, weight, competition_id}
         for(const [key,value] of Object.entries(newAthlete)) {
             if(value === null) {
                 return res.status(404).json({
@@ -84,8 +85,8 @@ athletesRouter
         .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
-        const {name, age, gender, weight, competition} = req.body
-        const athleteToUpdate = {name, age, gender, weight, competition}
+        const {name, age, gender, weight, competition_id} = req.body
+        const athleteToUpdate = {name, age, gender, weight, competition_id}
 
         const numberOfValues = Object.values(athleteToUpdate).filter(Boolean).length
         if(numberOfValues === 0) {

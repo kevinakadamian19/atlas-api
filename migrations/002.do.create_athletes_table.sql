@@ -3,10 +3,10 @@ CREATE TABLE atlas_athletes (
     name TEXT NOT NULL,
     age INTEGER NOT NULL,
     gender TEXT NOT NULL,
-    weight INTEGER NOT NULL,
+    weight INTEGER NOT NULL
 );
 
 ALTER TABLE atlas_lifts
     ADD COLUMN
-        athlete INTEGER atlas_athletes(id)
+        athlete_id INTEGER REFERENCES atlas_athletes(id)
         ON DELETE SET NULL;

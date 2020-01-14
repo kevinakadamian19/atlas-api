@@ -5,10 +5,10 @@ CREATE TABLE atlas_competitions (
 
 ALTER TABLE atlas_athletes
     ADD COLUMN
-        competition INTEGER REFERENCES atlas_competitions(id)
+        competition_id INTEGER REFERENCES atlas_competitions(id)
         ON DELETE SET NULL;
 
 ALTER TABLE atlas_lifts
     ADD COLUMN
-        competition INTEGER REFERENCES atlas_competitions(id)
+        competition_id INTEGER REFERENCES atlas_competitions(id)
         ON DELETE SET NULL;

@@ -1,4 +1,4 @@
-INSERT INTO atlas_athletes (name, age, gender, weight, competition)
+INSERT INTO atlas_athletes (name, age, gender, weight, competition_id)
     VALUES
 ('Damian Ta', '26', 'male', '83', '1'),
 ('Juan Salgado', '25', 'male', '83', '2'),

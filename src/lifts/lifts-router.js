@@ -12,7 +12,9 @@ const serializeLift = lift => ({
     deadlift: lift.deadlift,
     athlete: lift.athlete,
     event: lift.event,
-    total: lift.total
+    total: lift.total,
+    athlete_id: lift.athlete_id,
+    competition_id: lift.competition_id
 })
 
 liftsRouter
@@ -28,8 +30,8 @@ liftsRouter
         .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {squat, bench, deadlift, athlete, competition, total} = req.body;
-        const newLift = {squat, bench, deadlift, athlete, competition, total}
+        const {squat, bench, deadlift, athlete_id, competition_id, total} = req.body;
+        const newLift = {squat, bench, deadlift, athlete_id, competition_id, total}
         for(const [key,value] of Object.entries(newLift)) {
             if(value === null) {
                 return res.status(404).json({

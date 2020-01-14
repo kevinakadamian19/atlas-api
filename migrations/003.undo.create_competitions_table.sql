@@ -1,7 +1,7 @@
-ALTER TABLE atlas_lifts
-    DROP COLUMN competition;
-
 ALTER TABLE atlas_athletes
-    DROP COLUMN competition;
+    DROP COLUMN competition_id;
+
+ALTER TABLE atlas_lifts
+    DROP COLUMN competition_id;
 
 DROP TABLE IF EXISTS atlas_competitions;
